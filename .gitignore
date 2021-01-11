@@ -1,3 +1,10 @@
 .vscode
 notebooks
 .DS_Store
+__pycache__
+*.db
+*.pid
+*.log
+*.err
+*.out
+airflow/logs
