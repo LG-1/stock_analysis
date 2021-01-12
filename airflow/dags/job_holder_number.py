@@ -8,7 +8,7 @@ from airflow.operators.python import PythonOperator
 sys.path.append(os.path.abspath(os.path.join(os.getcwd(), "../..")))  # add root path
 sys.path.append(os.path.abspath(os.getcwd()))  # add root path
 
-from utils.stock_markets import get_all_codes
+from tasks.update_holdernumber import update_holdernumber
 
 
 default_args = {
@@ -26,15 +26,14 @@ default_args = {
     # 'end_date': datetime(2016, 1, 1),
 }
 
-# dag = DAG('tutorial', default_args=default_args, schedule_interval=timedelta(weeks=1))
 
 dag = DAG('job_holder_number', default_args=default_args,
-          schedule_interval=timedelta(minutes=3))
+          schedule_interval=timedelta(minutes=24*60))
 
 
 task = PythonOperator(
-    task_id='get_all_codes_airflow',
-    python_callable=get_all_codes,
+    task_id='update_holdernumber',
+    python_callable=update_holdernumber,
     op_kwargs={},
     dag=dag,
 )
