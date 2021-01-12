@@ -11,7 +11,7 @@ if [ -f $PIDFILE ]; then
     rm $PIDFILE
 fi
 
-# airflow db init
+airflow db init
 
 airflow users create --username lg --firstname L --lastname G --role Admin --email ourantech@163.com --password f3f6948e1f08f0ecc9864456fc16ff5d4d05d3602d542f84587eef5f5771
 
