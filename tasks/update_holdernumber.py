@@ -12,7 +12,7 @@ def update_holdernumber():
     for ts_code in all_codes[::-1]:
         print(ts_code)
         table = hn.get_holder_number_table(ts_code)
-        update_by_keys(STOCK_ANALYSIS.holder_number,
+        update_by_keys(STOCK_ANALYSIS.holder_number,  # holder_number
                        samples=list(table.T.to_dict().values()),
                        distinct_keys=['date', 'scode'])
         

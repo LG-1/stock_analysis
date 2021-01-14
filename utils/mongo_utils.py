@@ -1,6 +1,9 @@
 import pymongo
+from .contants import HOST_IP
+# CLIENT = pymongo.MongoClient(
+#     "mongodb://desktop-j5l1v77:27017/test?retryWrites=true&w=majority")
 CLIENT = pymongo.MongoClient(
-    "mongodb://desktop-j5l1v77:27017/test?retryWrites=true&w=majority")
+    f"mongodb://{HOST_IP}:27017/test?retryWrites=true&w=majority")
 STOCK_ANALYSIS = CLIENT.stock_analysis
 
 def update_by_keys(collections, samples=[], distinct_keys=None):

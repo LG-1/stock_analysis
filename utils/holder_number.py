@@ -15,9 +15,15 @@ class HolderNumber(object):
         chrome_options = Options()
         chrome_options.add_argument('--headless')
         chrome_options.add_argument('--disable-gpu')
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--disable-dev-shm-usage')
         if sys.platform in ['darwin']:
             # macos
             chromedriver_pth = '/Users/liguang/tools/ch_driver/chromedriver'
+        elif sys.platform in ['linux']:
+            # linux
+            chromedriver_pth = '/mnt/f/08_Stock_Analysis/stock_analysis/external_executions/chromedriver'
+            # chromedriver_pth = 'F:\\08_Stock_Analysis\\stock_analysis\\external_executions\\chromedriver'
         else:
             chromedriver_pth = ''
 
