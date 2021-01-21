@@ -6,7 +6,9 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 
 sys.path.append(os.path.abspath(os.path.join(os.getcwd(), "../..")))  # add root path
+sys.path.append(os.path.abspath(os.path.join(os.getcwd(), "..")))  # add root path
 sys.path.append(os.path.abspath(os.getcwd()))  # add root path
+print(sys.path)
 
 from tasks.update_holdernumber import update_holdernumber
 

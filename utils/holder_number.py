@@ -23,9 +23,8 @@ class HolderNumber(object):
         elif sys.platform in ['linux']:
             # linux
             chromedriver_pth = '/mnt/f/08_Stock_Analysis/stock_analysis/external_executions/chromedriver'
-            # chromedriver_pth = 'F:\\08_Stock_Analysis\\stock_analysis\\external_executions\\chromedriver'
         else:
-            chromedriver_pth = ''
+            chromedriver_pth = 'F:\\08_Stock_Analysis\\stock_analysis\\external_executions\\chromedriver.exe'
 
         self.driver = webdriver.Chrome(
             executable_path=chromedriver_pth, chrome_options=chrome_options)
