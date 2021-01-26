@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_celery_beat',
     'features',
     'tasks',
 ]
@@ -76,9 +77,17 @@ WSGI_APPLICATION = 'stock_analysis.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'django_db',
+		 'HOST': '127.0.0.1',
+		 'PORT': '3306',
+		 'USER': 'django', 
+		 'PASSWORD': 'django',
     }
 }
 
@@ -107,7 +116,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Chongqing'
 
 USE_I18N = True
 
@@ -123,4 +132,4 @@ STATIC_URL = '/static/'
 
 
 # Celery Configuration Options
-CELERY_TIMEZONE = "Asia/Chongqing"
+CELERY_TIMEZONE = TIME_ZONE

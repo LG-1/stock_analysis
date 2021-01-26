@@ -2,6 +2,14 @@
 
 # Introduction
 
+# Setting up
+## django
+    """ after setting up mysql connections"""
+    python manage.py migrate
+
+    python manage.py createsuperuser # liguang/gjingyun.li@163.com/
+
+
 # Run
 ## task sample
     python -m tasks.update_holdernumber
@@ -23,6 +31,8 @@
         result.ready()
 
         add.apply_async((2, 2), queue='celery_jobs')
+
+    celery -A stock_analysis beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
 
 
 ## airflow test

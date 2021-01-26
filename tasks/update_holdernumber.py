@@ -1,5 +1,8 @@
 import time
 from datetime import datetime
+
+from celery import shared_task
+
 from utils.stock_markets import get_all_codes
 
 from utils.holder_number import HolderNumber
@@ -58,7 +61,7 @@ def update_holdernumber_score():
     write_pickle(all_holder_num_scores, "notebooks/input/all_holder_num_scores.pkl")
     write_pickle(all_holder_num_scores, f"notebooks/input/all_holder_num_scores-{str(datetime.now().date())}.pkl")
         
-
+@shared_task
 def all_holder_tasks():
     update_holdernumber()
     update_holdernumber_score()

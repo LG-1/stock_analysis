@@ -1,4 +1,5 @@
 import os
+from celery.schedules import crontab
 
 from celery import Celery
 
@@ -16,14 +17,29 @@ app.conf.broker_transport_options = {'visibility_timeout': 3600}  # 1 hour.
 app.conf.broker_url = 'redis://127.0.0.1:6379/0'
 app.conf.result_backend = 'redis://127.0.0.1:6379/0'
 app.conf.task_serializer = 'json'
+app.conf.timezone = 'Asia/Chongqing'
 
-app.conf.imports = ['tasks.celery_jobs']
+app.conf.imports = ['tasks.celery_jobs', 'tasks.update_holdernumber']
 
 app.conf.update(
     task_routes = {
         'tasks.celery_jobs.*': {'queue': 'celery_jobs'},
+        'tasks.update_holdernumber.*': {'queue': 'celery_jobs'},
     },
 )
+
+app.conf.beat_schedule = {
+    'add-every-30-seconds': {
+        'task': 'tasks.celery_jobs.add',
+        'schedule': 30.0,
+        'args': (16, 16)
+    },
+    'run-update_job': {
+        'task': 'tasks.update_holdernumber.all_holder_tasks',
+        'schedule': crontab(hour=22, minute=59),
+        'args': ()
+    },
+}
 
 # Load task modules from all registered Django app configs.
 app.autodiscover_tasks()
