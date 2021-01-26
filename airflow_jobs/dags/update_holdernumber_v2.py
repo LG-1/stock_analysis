@@ -10,7 +10,7 @@ sys.path.append(os.path.abspath(os.path.join(os.getcwd(), "..")))  # add root pa
 sys.path.append(os.path.abspath(os.getcwd()))  # add root path
 print(sys.path)
 
-from tasks.update_holdernumber import update_holdernumber
+from tasks.update_holdernumber import update_holdernumber, update_holdernumber_score
 
 
 default_args = {
@@ -33,11 +33,22 @@ dag = DAG('update_holdernumber', default_args=default_args,
           schedule_interval=timedelta(minutes=24*60))
 
 
-task = PythonOperator(
-    task_id='update_holdernumber',
-    python_callable=update_holdernumber(),
+task1 = PythonOperator(
+    task_id='task1',
+    python_callable=update_holdernumber,
     op_kwargs={},
     dag=dag,
 )
 
-task
+task2 = PythonOperator(
+    task_id='task2',
+    python_callable=update_holdernumber_score,
+    op_kwargs={},
+    dag=dag,
+)
+
+# task1 >> task2
+task2
+
+if __name__ == "__main__":
+    dag.cli()

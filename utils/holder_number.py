@@ -2,10 +2,13 @@
 
 import os
 import sys
+import time
 from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import pandas as pd
+
+from .mongo_utils import STOCK_ANALYSIS
 
 ROOT_PTH = os.path.abspath(os.path.join(os.getcwd(), ".."))
 
@@ -27,8 +30,14 @@ class HolderNumber(object):
             chromedriver_pth = 'F:\\08_Stock_Analysis\\stock_analysis\\external_executions\\chromedriver.exe'
 
         self.driver = webdriver.Chrome(
-            executable_path=chromedriver_pth, chrome_options=chrome_options)
+            executable_path=chromedriver_pth, options=chrome_options)
         self.holder_number_url_prefix = 'http://f10.eastmoney.com/f10_v2/ShareholderResearch.aspx?code='
+
+    def get_holder_number_table_from_mongo(self, scode):
+        res = list(STOCK_ANALYSIS.holder_number.find({"scode": scode}, {"_id": False}))
+        if res:
+            return pd.DataFrame(res)
+        return pd.DataFrame()
 
     def get_holder_number_table(self, scode, retry_num=5):
         """
@@ -68,6 +77,7 @@ class HolderNumber(object):
                     table.columns = ['date', 'shareholders',
                                      'change_ratio', 'per_shares', 'concentration', 'price', 'per_holding_amount', 'total_ratio_ten', 'total_ratio_ten_public']
                     table['scode'] = scode
+                    table['update_timestamp'] = time.time()
                     return table
                 return table
 
@@ -79,30 +89,6 @@ class HolderNumber(object):
         print(
             f"get holder number table failed for {scode}, with {retry_num} retrys.")
         return table
-
-    def get_holder_num_score(self, scode, retry_num=5):
-        holder_nums = []
-        table = pd.DataFrame()
-
-        while retry_num:
-            try:
-                table = self.get_holder_number_table(scode)
-                if 'date' in table.columns and 'shareholders' in table.columns:
-                    table['shareholders'] = table['shareholders'].astype(float)
-                    holder_nums = table.sort_values('date', ascending=False)[
-                        'shareholders'].values
-                retry_num = 0
-            except Exception as e:
-                # print(scode)
-                retry_num -= 1
-
-        paras = [0.5, 0.3, 0.2]
-        total_score = 0
-        for i in range(len(holder_nums) - 1):
-            if i < len(paras):
-                total_score += -100 * \
-                    (holder_nums[i] - holder_nums[i + 1])/holder_nums[i + 1]
-        return round(total_score, 2)
 
     @staticmethod
     def normalize_numeric(numeric_str):
