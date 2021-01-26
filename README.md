@@ -15,7 +15,7 @@
 
 ## celery job test
     ### start up worker
-    celery -A stock_analysis worker --loglevel=INFO -E --concurrency=1 -Q celery_jobs
+    celery -A stock_analysis worker --loglevel=INFO -E --concurrency=1 -Q celery_jobs -P eventlet
 
         python .\manage.py shell
         from tasks.celery_jobs import add
