@@ -1,4 +1,7 @@
 2021-01-23:
-    windows redis 准备就绪, 开机自启动
-    celery 定时任务设置
+
+    开机启动
+        windows redis 准备就绪, 开机自启动
+        celery 定时任务设置
+    融资融券数据
     industry 分析 task 改写
