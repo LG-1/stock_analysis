@@ -10,10 +10,10 @@ def update_stock_prices_rzrq(*args, **kwargs):
     all_codes = get_all_codes()
 
     # update holder numder detail data
-    for ts_code in all_codes:
-        ts_code = lower_number2number_dot_upper(ts_code, days=kwargs.get('days', 720))
+    for ts_code in all_codes[::-1]:
+        ts_code = lower_number2number_dot_upper(ts_code)
         print(ts_code)
-        table = get_stock_exchange_data(ts_code)
+        table = get_stock_exchange_data(ts_code, days=kwargs.get('days', 720))
         update_by_keys(STOCK_ANALYSIS.stock_price_rzrq,
                     samples=list(table.T.to_dict().values()),
                     distinct_keys=['scode', 'trade_date'])
