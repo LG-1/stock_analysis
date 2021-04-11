@@ -19,12 +19,15 @@ app.conf.result_backend = 'redis://127.0.0.1:6379/0'
 app.conf.task_serializer = 'json'
 app.conf.timezone = 'Asia/Chongqing'
 
-app.conf.imports = ['tasks.celery_jobs', 'tasks.update_holdernumber', 'tasks.update_stock_exchange']
+app.conf.imports = ['tasks.celery_jobs', 'tasks.update_holdernumber',
+                    'tasks.update_stock_exchange', 'utils.stock_markets']
 
 app.conf.update(
     task_routes = {
         'tasks.celery_jobs.*': {'queue': 'celery_jobs'},
         'tasks.update_holdernumber.*': {'queue': 'celery_jobs'},
+        'tasks.update_stock_exchange.*': {'queue': 'celery_jobs'},
+        'utils.stock_markets.get_stock_exchange_data': {'queue': 'celery_jobs'},
     },
 )
 
@@ -37,12 +40,12 @@ app.conf.beat_schedule = {
     },
     'run-update-holder_job': {
         'task': 'tasks.update_holdernumber.all_holder_tasks',
-        'schedule': crontab(hour=5, minute=59),
+        'schedule': crontab(hour=3, minute=59),
         'args': ()
     },
     'run-update_stock_job': {
         'task': 'tasks.update_stock_exchange.all_stock_tasks',
-        'schedule': crontab(hour=6, minute=30),
+        'schedule': crontab(hour=1, minute=30),
         'args': (),
         'kwargs': {'days': 2}
     },
