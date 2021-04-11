@@ -1,14 +1,19 @@
+import time
+
+from celery import shared_task
+
 from datetime import datetime, timedelta
 
 import tushare as ts
 # ts.set_token('ad00beec7ad536862e87da4da49a6a95a1385973009fc949d16f1d94')
 pro = ts.pro_api()
 
-
+@shared_task
 def get_stock_exchange_data(scode, days=720):
     """
     包含股票交易数据及融资融券日线数据.
     """
+    print(f"getting {scode} at {datetime.now()}")
     mock_today = (datetime.now()+timedelta(days=1)).strftime('%Y%m%d')
     start_date = (datetime.strptime(mock_today, '%Y%m%d') - timedelta(days=days)).strftime('%Y%m%d')
     end_date = (datetime.strptime(mock_today, '%Y%m%d')).strftime('%Y%m%d')
@@ -18,8 +23,10 @@ def get_stock_exchange_data(scode, days=720):
     stock_details = daily_df.merge(margin_df, on=['trade_date', 'ts_code'], how='left').fillna(0)
     stock_details['rz-rq-ce'] = stock_details['rzye'] - stock_details['rqye']
     stock_details = stock_details.rename(columns={'ts_code': 'scode'})
+
+    stock_details_list = list(stock_details.T.to_dict().values())
     
-    return stock_details
+    return stock_details_list
 
 
 def get_all_codes():
@@ -48,4 +55,4 @@ def lower_number2number_dot_upper(ts_code):
 
 if __name__ == "__main__":
     daily_df = get_stock_exchange_data('600438.SH')
-    print(daily_df.shape)
+    print(daily_df)
